@@ -3,128 +3,165 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mediza Aragua — Venezuela R.</title>
-
+  <title>Reactiva Search — Reactivos de laboratorio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
+          fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"] },
           colors: {
-            corporate: "#1a365d",
-            corporateLight: "#2c5282",
-            sectionBg: "#f8fafc"
+            brand: {
+              magenta: "#D12E7B",
+              dark: "#0f172a",
+              navy: "#0b1224",
+            },
           },
           boxShadow: {
-            premium: "0 10px 30px rgba(26,54,93,0.08)",
-            premiumHover: "0 16px 40px rgba(26,54,93,0.14)"
-          }
-        }
-      }
+            card: "0 8px 24px rgba(15, 23, 42, 0.06)",
+            "card-glow": "0 0 0 1px rgba(209, 46, 123, 0.35), 0 10px 28px rgba(209, 46, 123, 0.1)",
+          },
+        },
+      },
     };
   </script>
-
   <style>
-    .nav-link { position: relative; transition: color .25s ease; }
-    .nav-link::after {
-      content: ""; position: absolute; left: 0; bottom: -6px; width: 0; height: 2px;
-      background: #1a365d; transition: width .25s ease;
-    }
-    .nav-link:hover::after { width: 100%; }
+    html { scroll-behavior: smooth; }
 
-    .product-card {
-      transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
-    }
-    .product-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 40px rgba(26,54,93,0.14);
-      border-color: rgba(44,82,130,0.35);
+    .hero-grid {
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 48px 48px;
     }
 
-    .qty-btn { transition: all .2s ease; }
-    .qty-btn:active { transform: scale(0.95); }
-
-    .photo-frame {
-      background: linear-gradient(145deg, #f8fafc, #ffffff);
-      border: 1px solid rgba(26, 54, 93, 0.15);
-      position: relative; overflow: hidden;
-    }
-    .photo-frame::before {
-      content: ""; position: absolute; inset: 0;
-      border: 10px solid rgba(255, 255, 255, 0.7);
-      border-radius: 1rem; pointer-events: none;
+    .hex-bg {
+      background-color: #f8fafc;
     }
 
-    .stock-high   { background: #f0fff4; color: #2f855a; border: 1px solid #9ae6b4; }
-    .stock-medium { background: #fffaf0; color: #c05621; border: 1px solid #fbd38d; }
-    .stock-zero   { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; }
-
-    .modal-backdrop { background: rgba(15, 23, 42, 0.55); }
-
-    .input-field {
-      width: 100%; border: 1px solid #cbd5e1; border-radius: .75rem;
-      padding: .65rem .85rem; font-size: .95rem; outline: none;
-      transition: border-color .2s ease, box-shadow .2s ease;
+    .wave-top {
+      display: block;
+      width: 100%;
+      height: 48px;
     }
-    .input-field:focus {
-      border-color: #2c5282;
-      box-shadow: 0 0 0 3px rgba(44,82,130,.14);
+    @media (min-width: 768px) {
+      .wave-top { height: 64px; }
     }
+
+    .product-card-active {
+      box-shadow: 0 0 0 1px rgba(209, 46, 123, 0.75), 0 8px 28px rgba(209, 46, 123, 0.12);
+    }
+
+    .qty-btn:active { transform: scale(0.96); }
   </style>
 </head>
-
 <body class="bg-white text-slate-800 font-sans antialiased">
-  <!-- Header -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <!-- EXACTO según solicitado -->
-      <a href="#inicio" class="text-corporate font-semibold text-lg sm:text-xl tracking-tight">
-        Mediza Aragua — Venezuela R.
+
+  <!--
+    Imágenes locales (coloca en esta carpeta o ajusta rutas en ASSETS):
+    banner.jpg — laboratorio (hero)
+    maracay.jpg — ciudad (quiénes somos)
+    fondo-productos.png — patrón catálogo (opcional)
+    header.png — logo opcional
+  -->
+
+  <header id="siteHeader" class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/50 transition-all duration-300 bg-white/70 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-[3.75rem] flex items-center justify-between">
+      <a href="#inicio" id="brandLink" class="flex items-center gap-2 min-w-0">
+        <span id="logoWrap" class="relative grid h-8 w-8 sm:h-9 sm:w-9 shrink-0 place-items-center rounded-xl bg-brand-magenta/10 ring-1 ring-slate-200/80 transition-colors duration-300">
+          <img id="logoImg" src="" alt="Reactiva Search" class="hidden h-6 w-auto max-w-[1.75rem] object-contain" width="40" height="40" />
+          <span id="logoFallback" class="text-xl sm:text-2xl font-extrabold text-brand-magenta leading-none">R</span>
+        </span>
+        <span id="logoWordmark" class="font-extrabold tracking-tight text-xs sm:text-sm uppercase text-slate-800 truncate">
+          Reactiva <span class="font-semibold text-slate-600">Search</span>
+        </span>
       </a>
-
-      <nav class="hidden md:flex items-center gap-8 text-sm text-slate-600">
-        <a href="#inicio" class="nav-link hover:text-corporate">Inicio</a>
-        <a href="#catalogo" class="nav-link hover:text-corporate">Productos</a>
-        <a href="#contacto" class="nav-link hover:text-corporate">Contacto</a>
-      </nav>
-
-      <button id="menuBtn" class="md:hidden rounded-lg border border-slate-200 px-3 py-2 text-corporate text-sm" aria-label="Abrir menú">
-        Menú
-      </button>
-    </div>
-
-    <div id="mobileMenu" class="md:hidden hidden border-t border-slate-100 bg-white">
-      <nav class="px-4 py-3 flex flex-col gap-3 text-sm text-slate-700">
-        <a href="#inicio" class="hover:text-corporate">Inicio</a>
-        <a href="#catalogo" class="hover:text-corporate">Productos</a>
-        <a href="#contacto" class="hover:text-corporate">Contacto</a>
-      </nav>
+      <a href="#catalogo" id="navCatalogBtn"
+        class="inline-flex items-center rounded-full bg-brand-magenta px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white shadow-md shadow-brand-magenta/20 hover:brightness-110 transition shrink-0">
+        Ver Catálogo
+      </a>
     </div>
   </header>
 
-  <!-- Hero -->
-  <section id="inicio" class="bg-sectionBg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-      <div class="grid lg:grid-cols-2 gap-10 items-center">
-        <div>
-          <p class="inline-flex items-center rounded-full border border-corporate/20 text-corporate text-xs font-semibold tracking-wide px-3 py-1 bg-white">
-            INFORMACIÓN RÁPIDA
-          </p>
-          <h1 class="mt-5 text-3xl sm:text-4xl font-bold text-corporate leading-tight">
-            Distribución farmacéutica confiable para Aragua
-          </h1>
-          <p class="mt-5 text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl">
-            Continuidad de abastecimiento, catálogo profesional y atención comercial ágil para farmacias y centros de salud.
-          </p>
+  <!-- Hero laboratorio (compacto, tono laboratorio) -->
+  <section id="inicio" class="relative min-h-[52vh] sm:min-h-[58vh] flex flex-col justify-center pt-[4.5rem] pb-10 sm:pb-12 overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.15)]">
+    <div class="absolute inset-0">
+      <img id="heroBg" src="" alt="" class="h-full w-full object-cover" width="1920" height="1080" />
+      <!-- Overlay cian / pizarra ~45–55% para tono laboratorio + legibilidad -->
+      <div class="absolute inset-0 border border-black/10 box-border shadow-[inset_0_0_0_1px_rgba(0,0,0,0.06)] bg-gradient-to-b from-cyan-950/50 via-slate-950/50 to-slate-950/[0.55]"></div>
+      <div class="absolute inset-0 hero-grid opacity-60 pointer-events-none"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div class="max-w-2xl">
+        <p class="inline-flex items-center gap-2 rounded-full border border-white/30 bg-black/20 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
+          <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow shadow-emerald-400/50"></span>
+          Reactivos • Aragua • Venezuela
+        </p>
+        <h1 class="mt-4 text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.08]">
+          Reactivos de<br />Laboratorio<br />
+          <span class="relative inline-block">
+            Confiables
+            <span class="absolute left-0 -bottom-0.5 h-1 w-full rounded-full bg-brand-magenta" aria-hidden="true"></span>
+          </span>
+        </h1>
+        <p class="mt-3 text-base sm:text-lg font-normal text-white">en Aragua.</p>
+        <div class="mt-5 flex flex-wrap gap-2">
+          <a href="#catalogo" class="inline-flex items-center gap-1.5 rounded-full bg-brand-magenta px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-magenta/25 hover:brightness-110 transition">
+            Ver Catálogo <span aria-hidden="true">→</span>
+          </a>
+          <a href="#nosotros" class="inline-flex items-center rounded-full border border-white/40 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/15 transition backdrop-blur-sm">
+            Quiénes somos
+          </a>
         </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- Quiénes somos -->
+  <section id="nosotros" class="relative bg-white">
+    <svg class="wave-top -mt-1 text-white" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+      <path fill="currentColor" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+    </svg>
+    <div class="relative -mt-8 sm:-mt-12 pb-12 sm:pb-16">
+      <div class="absolute inset-0">
+        <img id="maracayBg" src="" alt="" class="h-full w-full object-cover" width="1920" height="1080" />
+        <div class="absolute inset-0 bg-gradient-to-br from-cyan-950/45 via-slate-950/50 to-slate-950/55"></div>
+      </div>
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
         <div>
-          <div class="photo-frame h-80 sm:h-96 rounded-2xl shadow-premium grid place-items-center p-4">
-            <img src="" alt="Foto de presentación" class="w-full h-full object-cover rounded-xl hidden" id="motherPhoto" />
-            <div id="photoPlaceholder" class="text-center px-6">
-              <div class="w-16 h-16 mx-auto rounded-full bg-corporate/10 text-corporate grid place-items-center text-2xl">📷</div>
-              <h3 class="mt-4 text-corporate font-semibold text-lg">Espacio listo para foto de tu madre</h3>
-              <p class="mt-2 text-sm text-slate-500">Agrega la ruta en <code>src</code> de la etiqueta <code>img</code>.</p>
+          <p class="inline-flex items-center gap-2 rounded-full bg-brand-magenta px-2.5 py-0.5 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wide text-white">
+            Quiénes somos
+          </p>
+          <h2 class="mt-4 text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white leading-tight">
+            Distribución directa con
+            <span class="text-brand-magenta">atención personalizada.</span>
+          </h2>
+          <p class="mt-3 text-sm sm:text-base text-white max-w-xl leading-relaxed">
+            Somos distribuidores autorizados de reactivos de laboratorio de alta calidad en el estado Aragua.
+          </p>
+          <p class="mt-2 text-sm sm:text-base text-white max-w-xl leading-relaxed">
+            Priorizamos entrega confiable y trato cercano: arma tu pedido en el catálogo y envíalo por WhatsApp en segundos.
+          </p>
+          <a href="https://wa.me/584124329776" target="_blank" rel="noopener noreferrer"
+            class="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-magenta px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-magenta/30 hover:brightness-110 transition">
+            Contactar directamente
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+        <div class="relative">
+          <div class="rounded-3xl border-2 border-brand-magenta/60 bg-gradient-to-b from-brand-magenta/25 to-slate-950/40 p-4 sm:p-5 shadow-[0_0_24px_rgba(209,46,123,0.35)] backdrop-blur-sm">
+            <div class="rounded-2xl bg-white/95 p-6 flex flex-col items-center text-center min-h-[200px] sm:min-h-[220px] justify-center">
+              <div class="h-14 w-14 rounded-full border border-slate-200 bg-slate-50 text-slate-400 grid place-items-center" aria-hidden="true">
+                <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+              </div>
+              <p class="mt-3 text-xs sm:text-sm font-medium text-slate-600">Foto de la distribuidora</p>
+            </div>
+            <div class="mt-3 inline-flex flex-col rounded-2xl bg-brand-magenta/95 px-3 py-2 text-white shadow-lg">
+              <span class="text-[9px] font-bold uppercase tracking-wider opacity-90">Distribuidora</span>
+              <span class="text-xs sm:text-sm font-extrabold">Aragua, Venezuela</span>
             </div>
           </div>
         </div>
@@ -133,411 +170,460 @@
   </section>
 
   <!-- Catálogo -->
-  <section id="catalogo" class="py-16 sm:py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="mb-10">
-        <h2 class="text-2xl sm:text-3xl font-bold text-corporate">Catálogo de Ventas</h2>
-        <p class="mt-2 text-slate-600">Selecciona cantidades y luego presiona Ordenar.</p>
+  <section id="catalogo" class="relative py-10 sm:py-14 hex-bg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center max-w-2xl mx-auto">
+        <p class="inline-flex items-center gap-2 rounded-full bg-white px-2.5 py-0.5 text-[10px] sm:text-xs font-semibold uppercase tracking-wide text-brand-magenta shadow-sm ring-1 ring-brand-magenta/15">
+          <span class="h-1.5 w-1.5 rounded-full bg-brand-magenta"></span>
+          Catálogo 2026
+        </p>
+        <h2 class="mt-3 text-2xl sm:text-4xl font-extrabold text-brand-navy">Nuestros Productos</h2>
+        <p class="mt-2 text-slate-600 text-sm sm:text-base">
+          Selecciona productos y cantidades para generar tu pedido por WhatsApp.
+        </p>
       </div>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="productGrid">
-        <article class="product-card bg-white border border-slate-200 rounded-2xl p-5 shadow-premium" data-name="Amoxicilina 500mg" data-price="8.50" data-stock="120">
-          <h3 class="text-lg font-semibold text-corporate">Amoxicilina 500mg</h3>
-          <p class="text-sm text-slate-500 mt-1">Laboratorio FarmaPlus</p>
-          <div class="mt-4 flex items-center justify-between">
-            <p class="text-2xl font-bold text-blue-600">$8.50</p>
-            <span class="stock-badge text-xs font-semibold rounded-full px-2.5 py-1 border">Stock: 120</span>
-          </div>
-          <div class="mt-5 inline-flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
-            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="decrease">-</button>
-            <span class="qty-value w-12 text-center font-semibold">0</span>
-            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="increase">+</button>
-          </div>
-        </article>
-
-        <article class="product-card bg-white border border-slate-200 rounded-2xl p-5 shadow-premium" data-name="Losartán 50mg" data-price="12.00" data-stock="25">
-          <h3 class="text-lg font-semibold text-corporate">Losartán 50mg</h3>
-          <p class="text-sm text-slate-500 mt-1">Laboratorio CardioLab</p>
-          <div class="mt-4 flex items-center justify-between">
-            <p class="text-2xl font-bold text-blue-600">$12.00</p>
-            <span class="stock-badge text-xs font-semibold rounded-full px-2.5 py-1 border">Stock: 25</span>
-          </div>
-          <div class="mt-5 inline-flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
-            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="decrease">-</button>
-            <span class="qty-value w-12 text-center font-semibold">0</span>
-            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="increase">+</button>
-          </div>
-        </article>
-
-        <article class="product-card bg-white border border-slate-200 rounded-2xl p-5 shadow-premium" data-name="Omeprazol 20mg" data-price="6.75" data-stock="0">
-          <h3 class="text-lg font-semibold text-corporate">Omeprazol 20mg</h3>
-          <p class="text-sm text-slate-500 mt-1">Laboratorio GastroMed</p>
-          <div class="mt-4 flex items-center justify-between">
-            <p class="text-2xl font-bold text-blue-600">$6.75</p>
-            <span class="stock-badge text-xs font-semibold rounded-full px-2.5 py-1 border">Stock: 0</span>
-          </div>
-          <div class="mt-5 inline-flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
-            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="decrease">-</button>
-            <span class="qty-value w-12 text-center font-semibold">0</span>
-            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="increase">+</button>
-          </div>
-        </article>
-
-        <article class="product-card bg-white border border-slate-200 rounded-2xl p-5 shadow-premium" data-name="Acetaminofén 500mg" data-price="4.90" data-stock="75">
-          <h3 class="text-lg font-semibold text-corporate">Acetaminofén 500mg</h3>
-          <p class="text-sm text-slate-500 mt-1">Laboratorio MediCore</p>
-          <div class="mt-4 flex items-center justify-between">
-            <p class="text-2xl font-bold text-blue-600">$4.90</p>
-            <span class="stock-badge text-xs font-semibold rounded-full px-2.5 py-1 border">Stock: 75</span>
-          </div>
-          <div class="mt-5 inline-flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
-            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="decrease">-</button>
-            <span class="qty-value w-12 text-center font-semibold">0</span>
-            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="increase">+</button>
-          </div>
-        </article>
-
-        <article class="product-card bg-white border border-slate-200 rounded-2xl p-5 shadow-premium" data-name="Metformina 850mg" data-price="9.80" data-stock="12">
-          <h3 class="text-lg font-semibold text-corporate">Metformina 850mg</h3>
-          <p class="text-sm text-slate-500 mt-1">Laboratorio DiabeCare</p>
-          <div class="mt-4 flex items-center justify-between">
-            <p class="text-2xl font-bold text-blue-600">$9.80</p>
-            <span class="stock-badge text-xs font-semibold rounded-full px-2.5 py-1 border">Stock: 12</span>
-          </div>
-          <div class="mt-5 inline-flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
-            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="decrease">-</button>
-            <span class="qty-value w-12 text-center font-semibold">0</span>
-            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="increase">+</button>
-          </div>
-        </article>
-
-        <article class="product-card bg-white border border-slate-200 rounded-2xl p-5 shadow-premium" data-name="Azitromicina 500mg" data-price="14.20" data-stock="0">
-          <h3 class="text-lg font-semibold text-corporate">Azitromicina 500mg</h3>
-          <p class="text-sm text-slate-500 mt-1">Laboratorio BioSalud</p>
-          <div class="mt-4 flex items-center justify-between">
-            <p class="text-2xl font-bold text-blue-600">$14.20</p>
-            <span class="stock-badge text-xs font-semibold rounded-full px-2.5 py-1 border">Stock: 0</span>
-          </div>
-          <div class="mt-5 inline-flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
-            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="decrease">-</button>
-            <span class="qty-value w-12 text-center font-semibold">0</span>
-            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="increase">+</button>
-          </div>
-        </article>
+      <div class="mt-6 max-w-2xl mx-auto">
+        <label class="relative block">
+          <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          </span>
+          <input id="searchInput" type="search" placeholder="Buscar producto..."
+            class="w-full rounded-full border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm shadow-card outline-none focus:ring-2 focus:ring-brand-magenta/20 focus:border-brand-magenta/35 transition" />
+        </label>
       </div>
 
-      <div class="mt-10 flex justify-center">
-        <button id="orderBtn" disabled
-          class="inline-flex items-center rounded-xl px-8 py-3 text-sm font-semibold shadow-premium transition bg-slate-300 text-slate-500 cursor-not-allowed">
-          Ordenar por WhatsApp
-        </button>
-      </div>
+      <div id="categoryFilters" class="mt-4 flex flex-wrap justify-center gap-1.5"></div>
+
+      <div id="productGrid" class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5"></div>
     </div>
   </section>
 
-  <section id="contacto" class="bg-sectionBg py-14">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h3 class="text-2xl sm:text-3xl font-bold text-corporate">Atención comercial Mediza Aragua</h3>
-      <p class="mt-3 text-slate-600">Solicita disponibilidad y condiciones de despacho.</p>
+  <footer class="bg-brand-navy text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 grid md:grid-cols-2 gap-8">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="grid h-9 w-9 place-items-center rounded-xl bg-white/10 text-xl font-extrabold text-brand-magenta">R</span>
+          <span class="font-extrabold tracking-tight uppercase">Reactiva Search</span>
+        </div>
+        <p class="mt-4 text-sm sm:text-base text-slate-300 max-w-md leading-relaxed">
+          Distribución de reactivos de laboratorio en el estado Aragua, Venezuela. Calidad, confianza y precisión en cada pedido.
+        </p>
+      </div>
+      <div>
+        <h3 class="text-xs font-bold uppercase tracking-widest text-slate-400">Legal</h3>
+        <p class="mt-3 text-sm text-slate-300 leading-relaxed">
+          La disponibilidad y registro de productos pueden variar según normativa vigente. Información orientativa; consulte fichas técnicas y requisitos locales.
+        </p>
+        <p class="mt-4 inline-flex items-center gap-2 text-sm text-slate-300">
+          <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+          Reg. MPPS — Activo
+        </p>
+      </div>
     </div>
-  </section>
+  </footer>
 
-  <!-- WA flotante: subido en móvil para no tapar Ordenar -->
-  <a id="waFloatBtn" href="#"
-     class="fixed right-5 bottom-24 md:bottom-5 w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 text-white grid place-items-center text-2xl z-30 shadow-xl"
-     aria-label="WhatsApp" title="Escribir por WhatsApp">
-    💬
+  <a id="waFloatBtn" href="#" class="fixed right-5 bottom-24 sm:bottom-28 z-40 grid h-14 w-14 place-items-center rounded-full bg-emerald-500 text-white shadow-xl shadow-emerald-500/30 hover:bg-emerald-600 transition"
+    aria-label="WhatsApp" title="WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-7 w-7 fill-current" aria-hidden="true"><path d="M20.5 12.2c0 4.5-3.7 8.2-8.2 8.2-1.4 0-2.8-.4-4-1.1L4 20l1.8-4.1c-.8-1.2-1.2-2.6-1.2-4.1 0-4.5 3.7-8.2 8.2-8.2s8.3 3.7 8.3 8.2zM12 4.9c-4 0-7.3 3.3-7.3 7.3 0 1.3.4 2.6 1 3.7l-.7 1.6 1.7-.5c1 .6 2.2.9 3.4.9 4 0 7.3-3.3 7.3-7.3S16 4.9 12 4.9zm4.1 9.5c-.2-.1-1.2-.6-1.4-.7-.2-.1-.4-.1-.6.1-.2.2-.7.7-.9.9-.2.2-.4.2-.6.1-.3-.1-1.1-.4-2.1-1.3-.8-.7-1.3-1.6-1.5-1.9-.2-.3 0-.5.1-.6l.3-.4c.1-.1.2-.3.3-.4.1-.1.1-.3 0-.4l-1.4-3.5c-.1-.3-.3-.3-.4-.3h-.4c-.1 0-.4.1-.6.3-.2.2-.9.9-.9 2.2 0 1.3.9 2.6 1.1 2.8.1.2 1.9 2.9 4.6 4 .6.3 1.1.4 1.5.5.6.1 1.2.1 1.7.1.5 0 1.2-.2 1.4-.5.2-.3.2-.5.1-.6z"/></svg>
   </a>
 
-  <!-- Modal -->
-  <div id="orderModal" class="fixed inset-0 z-50 hidden">
-    <div class="modal-backdrop absolute inset-0"></div>
-
-    <div class="relative min-h-screen flex items-center justify-center p-4">
-      <div class="w-full max-w-xl bg-white rounded-2xl shadow-premiumHover border border-slate-200 p-6">
-        <div class="flex items-start justify-between gap-4">
-          <div>
-            <h3 class="text-xl font-bold text-corporate">Confirmar Pedido</h3>
-            <p class="text-sm text-slate-500 mt-1">Verifica resumen y completa los datos del cliente.</p>
-          </div>
-          <button id="closeModalBtn" class="text-slate-500 hover:text-slate-700 text-lg" aria-label="Cerrar modal">✕</button>
-        </div>
-
-        <!-- Resumen visual dentro del modal -->
-        <div class="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
-          <p class="text-sm font-semibold text-slate-700 mb-2">Resumen del pedido</p>
-          <ul id="orderSummaryList" class="space-y-2 text-sm text-slate-700"></ul>
-          <p id="orderSummaryEmpty" class="text-sm text-slate-500">No hay productos seleccionados.</p>
-          <hr class="my-3 border-slate-200" />
-          <p class="text-base font-bold text-corporate">Total General: <span id="modalTotal">$0.00</span></p>
-        </div>
-
-        <form id="orderForm" class="mt-5 space-y-4">
-          <div>
-            <label for="clientName" class="block text-sm font-medium text-slate-700 mb-1">Nombre del cliente</label>
-            <input id="clientName" type="text" class="input-field" placeholder="Ej: Farmacia San José" required />
-          </div>
-
-          <div>
-            <label for="clientPhone" class="block text-sm font-medium text-slate-700 mb-1">Teléfono (Venezuela)</label>
-            <input id="clientPhone" type="tel" class="input-field" placeholder="Ej: 04121234567 o +584121234567" required />
-            <p id="phoneError" class="text-xs text-red-600 mt-1 hidden">Formato inválido. Usa 04XXXXXXXXX o +584XXXXXXXXX.</p>
-          </div>
-
-          <div>
-            <label for="labName" class="block text-sm font-medium text-slate-700 mb-1">Nombre del Laboratorio</label>
-            <input id="labName" type="text" class="input-field" placeholder="Ej: FarmaPlus" />
-          </div>
-
-          <p id="sendingMessage" class="text-sm text-emerald-600 font-medium hidden">
-            ¡Pedido preparado! Redirigiendo a WhatsApp...
+  <div id="orderBar" class="fixed inset-x-0 bottom-0 z-40 pointer-events-none opacity-0 translate-y-full transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 pb-4 pointer-events-auto">
+      <div class="rounded-2xl bg-slate-900/95 text-white shadow-2xl ring-1 ring-white/10 backdrop-blur-md px-3 sm:px-5 py-2.5 sm:py-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
+        <div class="flex-1 min-w-0">
+          <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Tu pedido</p>
+          <p class="text-xs sm:text-sm font-semibold truncate">
+            <span id="barCount">0</span> productos · Total estimado:
+            <span id="barTotal" class="text-brand-magenta">$0.00</span>
           </p>
+        </div>
+        <div class="flex gap-2 sm:shrink-0">
+          <button type="button" id="clearCartBtn" class="rounded-full border border-white/20 px-3 py-2 text-xs font-semibold text-white/90 hover:bg-white/10 transition">
+            Vaciar
+          </button>
+          <button type="button" id="openSummaryBtn" class="inline-flex flex-1 sm:flex-none items-center justify-center gap-1.5 rounded-full bg-emerald-500 px-4 py-2 text-xs sm:text-sm font-bold text-white hover:bg-emerald-600 transition shadow-lg shadow-emerald-500/25">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 sm:h-5 sm:w-5 fill-current" aria-hidden="true"><path d="M20.5 12.2c0 4.5-3.7 8.2-8.2 8.2-1.4 0-2.8-.4-4-1.1L4 20l1.8-4.1c-.8-1.2-1.2-2.6-1.2-4.1 0-4.5 3.7-8.2 8.2-8.2s8.3 3.7 8.3 8.2zM12 4.9c-4 0-7.3 3.3-7.3 7.3 0 1.3.4 2.6 1 3.7l-.7 1.6 1.7-.5c1 .6 2.2.9 3.4.9 4 0 7.3-3.3 7.3-7.3S16 4.9 12 4.9zm4.1 9.5c-.2-.1-1.2-.6-1.4-.7-.2-.1-.4-.1-.6.1-.2.2-.7.7-.9.9-.2.2-.4.2-.6.1-.3-.1-1.1-.4-2.1-1.3-.8-.7-1.3-1.6-1.5-1.9-.2-.3 0-.5.1-.6l.3-.4c.1-.1.2-.3.3-.4.1-.1.1-.3 0-.4l-1.4-3.5c-.1-.3-.3-.3-.4-.3h-.4c-.1 0-.4.1-.6.3-.2.2-.9.9-.9 2.2 0 1.3.9 2.6 1.1 2.8.1.2 1.9 2.9 4.6 4 .6.3 1.1.4 1.5.5.6.1 1.2.1 1.7.1.5 0 1.2-.2 1.4-.5.2-.3.2-.5.1-.6z"/></svg>
+            Pedido
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-          <div class="flex gap-3 pt-1">
-            <button type="button" id="cancelModalBtn"
-              class="w-full rounded-xl border border-slate-300 text-slate-700 py-2.5 font-medium hover:bg-slate-50 transition">
-              Cancelar
-            </button>
-            <button id="sendOrderBtn" type="submit" disabled
-              class="w-full rounded-xl py-2.5 font-medium transition bg-slate-300 text-slate-500 cursor-not-allowed">
-              Enviar Pedido
-            </button>
+  <div id="orderModal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-backdrop absolute inset-0 bg-slate-950/55 backdrop-blur-[2px]"></div>
+    <div class="relative min-h-screen flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="w-full sm:max-w-lg bg-white sm:rounded-3xl shadow-2xl overflow-hidden ring-1 ring-slate-200 max-h-[92vh] flex flex-col">
+        <div class="bg-brand-magenta px-4 py-3 sm:px-5 sm:py-3.5 flex items-start justify-between gap-3 text-white shrink-0">
+          <div>
+            <h3 class="text-base sm:text-lg font-extrabold">Resumen del pedido</h3>
+            <p class="text-[11px] sm:text-sm text-white/85">Revisa cantidades y envía por WhatsApp.</p>
           </div>
-        </form>
+          <button type="button" id="closeModalBtn" class="rounded-full bg-white/15 hover:bg-white/25 p-2 transition" aria-label="Cerrar">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <div class="p-4 sm:p-5 overflow-y-auto flex-1 space-y-3">
+          <ul id="orderSummaryList" class="space-y-2 text-sm"></ul>
+          <p id="orderSummaryEmpty" class="text-xs sm:text-sm text-slate-500">No hay productos seleccionados.</p>
+          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3 flex items-center justify-between">
+            <span class="text-xs sm:text-sm font-semibold text-slate-600">Total estimado</span>
+            <span id="modalTotal" class="text-lg sm:text-xl font-extrabold text-brand-magenta">$0.00</span>
+          </div>
+          <div class="grid gap-2.5">
+            <div>
+              <label for="clientName" class="text-[11px] font-semibold text-slate-600">Nombre / Farmacia</label>
+              <input id="clientName" type="text" autocomplete="name"
+                class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-magenta/20 focus:border-brand-magenta/40"
+                placeholder="Ej: Laboratorio Central" />
+            </div>
+            <div>
+              <label for="clientPhone" class="text-[11px] font-semibold text-slate-600">Teléfono (Venezuela)</label>
+              <input id="clientPhone" type="tel" autocomplete="tel"
+                class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-magenta/20 focus:border-brand-magenta/40"
+                placeholder="0412… o +58412…" />
+              <p id="phoneError" class="text-xs text-red-600 mt-1 hidden">Formato inválido. Usa 04XXXXXXXXX o +584XXXXXXXXX.</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-4 sm:p-5 pt-0 border-t border-slate-100 bg-white shrink-0">
+          <button type="button" id="sendOrderBtn"
+            class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-emerald-500 px-4 py-3 text-sm font-bold text-white hover:bg-emerald-600 transition shadow-lg shadow-emerald-500/25 disabled:opacity-45 disabled:cursor-not-allowed disabled:hover:bg-emerald-500">
+            Enviar pedido por WhatsApp
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // =========================
-    // CONFIGURACION
-    // =========================
-    // Reemplazar por numero real (sin + ni espacios). Ej: 58412XXXXXXX
-    const WA_NUMBER = "58XXXXXXXXXX";
-    const BASE_MESSAGE = "Hola, estoy interesado en realizar un pedido en Mediza Aragua";
+    /** Rutas de imágenes locales (misma carpeta que index.html por defecto) */
+    const ASSETS = {
+      heroLab: "banner.jpg",
+      maracay: "maracay.jpg",
+      catalogBg: "fondo-productos.png",
+      logoMark: "header.png",
+    };
 
-    // Header mobile
-    const menuBtn = document.getElementById("menuBtn");
-    const mobileMenu = document.getElementById("mobileMenu");
-    menuBtn.addEventListener("click", () => mobileMenu.classList.toggle("hidden"));
+    const PLACEHOLDER_HERO =
+      "https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=1920&q=80&auto=format&fit=crop";
+    const PLACEHOLDER_CITY =
+      "https://images.unsplash.com/photo-1514565131-fce0801e5785?w=1920&q=80&auto=format&fit=crop";
 
-    // Foto placeholder
-    const motherPhoto = document.getElementById("motherPhoto");
-    const photoPlaceholder = document.getElementById("photoPlaceholder");
-    if (motherPhoto.getAttribute("src") && motherPhoto.getAttribute("src").trim() !== "") {
-      motherPhoto.classList.remove("hidden");
-      photoPlaceholder.classList.add("hidden");
+    const products = [
+      { id: "p1", name: "Amoxicilina 500mg", category: "Antibióticos", price: 4.5, stock: 240, image: "https://images.unsplash.com/photo-1584308666744-24d5c474e2ae?w=800&q=80&auto=format&fit=crop", detail: "Caja x 30 cápsulas" },
+      { id: "p2", name: "Ibuprofeno 400mg", category: "Analgésicos", price: 3.2, stock: 180, image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80&auto=format&fit=crop", detail: "Blíster x 10 tabletas" },
+      { id: "p3", name: "Vitamina D3 2000 UI", category: "Vitaminas", price: 6.9, stock: 95, image: "https://images.unsplash.com/photo-1550572017-4fc7078ce9c9?w=800&q=80&auto=format&fit=crop", detail: "Frasco x 60 softgels" },
+      { id: "p4", name: "Metformina 850mg", category: "Metabólicos", price: 5.4, stock: 60, image: "https://images.unsplash.com/photo-1471864190280-a93a3070b6de?w=800&q=80&auto=format&fit=crop", detail: "Caja x 30 tabletas" },
+      { id: "p5", name: "Losartán 50mg", category: "Cardiovascular", price: 7.1, stock: 40, image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80&auto=format&fit=crop", detail: "Caja x 28 tabletas" },
+      { id: "p6", name: "Omeprazol 20mg", category: "Gastro", price: 4.1, stock: 0, image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80&auto=format&fit=crop", detail: "Caja x 14 cápsulas" },
+    ];
+
+    const CATEGORIES = ["Todos", ...Array.from(new Set(products.map((p) => p.category))).sort()];
+
+    const WA_NUMBER = "584124329776";
+    const BASE_MESSAGE = "Hola Reactiva Search, quisiera información sobre disponibilidad y precios.";
+
+    let quantities = Object.fromEntries(products.map((p) => [p.id, 0]));
+    let activeCategory = "Todos";
+    let searchQuery = "";
+
+    const $ = (sel) => document.querySelector(sel);
+
+    function applyAssets() {
+      const hero = $("#heroBg");
+      const mar = $("#maracayBg");
+      const logo = $("#logoImg");
+      const hex = document.querySelector(".hex-bg");
+
+      hero.src = ASSETS.heroLab || "";
+      hero.onerror = () => { hero.src = PLACEHOLDER_HERO; };
+
+      mar.src = ASSETS.maracay || "";
+      mar.onerror = () => { mar.src = PLACEHOLDER_CITY; };
+
+      if (ASSETS.catalogBg && hex) {
+        hex.style.backgroundImage = `url("${ASSETS.catalogBg}")`;
+        hex.style.backgroundSize = "480px auto";
+        hex.style.backgroundRepeat = "repeat";
+      }
+
+      if (ASSETS.logoMark) {
+        logo.src = ASSETS.logoMark;
+        logo.onload = () => {
+          logo.classList.remove("hidden");
+          $("#logoFallback").classList.add("hidden");
+        };
+        logo.onerror = () => {
+          logo.classList.add("hidden");
+          $("#logoFallback").classList.remove("hidden");
+        };
+      }
     }
 
-    // Elementos generales
-    const cards = [...document.querySelectorAll(".product-card")];
-    const orderBtn = document.getElementById("orderBtn");
-    const waFloatBtn = document.getElementById("waFloatBtn");
-
-    // Modal
-    const modal = document.getElementById("orderModal");
-    const closeModalBtn = document.getElementById("closeModalBtn");
-    const cancelModalBtn = document.getElementById("cancelModalBtn");
-    const orderForm = document.getElementById("orderForm");
-
-    // Form
-    const clientName = document.getElementById("clientName");
-    const clientPhone = document.getElementById("clientPhone");
-    const labName = document.getElementById("labName");
-    const phoneError = document.getElementById("phoneError");
-    const sendOrderBtn = document.getElementById("sendOrderBtn");
-    const sendingMessage = document.getElementById("sendingMessage");
-
-    // Resumen modal
-    const orderSummaryList = document.getElementById("orderSummaryList");
-    const orderSummaryEmpty = document.getElementById("orderSummaryEmpty");
-    const modalTotal = document.getElementById("modalTotal");
-
-    // Helpers stock
-    function setStockBadgeClass(stock, badge) {
-      badge.classList.remove("stock-high", "stock-medium", "stock-zero");
-      if (stock <= 0) badge.classList.add("stock-zero");
-      else if (stock <= 30) badge.classList.add("stock-medium");
-      else badge.classList.add("stock-high");
+    function formatMoney(n) {
+      return `$${n.toFixed(2)}`;
     }
 
     function getSelections() {
-      return cards.map(card => {
-        const name = card.dataset.name;
-        const price = parseFloat(card.dataset.price || "0");
-        const stock = parseInt(card.dataset.stock || "0", 10);
-        const qty = parseInt(card.querySelector(".qty-value").textContent || "0", 10);
-        return { card, name, price, stock, qty, subtotal: qty * price };
-      }).filter(item => item.qty > 0);
+      return products
+        .map((p) => ({
+          ...p,
+          qty: quantities[p.id] || 0,
+          subtotal: (quantities[p.id] || 0) * p.price,
+        }))
+        .filter((x) => x.qty > 0);
     }
 
     function calcTotal(items) {
-      return items.reduce((sum, item) => sum + item.subtotal, 0);
+      return items.reduce((s, x) => s + x.subtotal, 0);
     }
 
-    function buildWaLink(message) {
-      return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
+    function buildWaLink(text) {
+      return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
     }
 
-    // Validacion telefono Venezuela:
-    // 04121234567  o  +584121234567
-    function isValidVzlaPhone(phoneRaw) {
-      const phone = phoneRaw.replace(/\s|-/g, "");
-      const regex = /^(?:\+58|0)(4\d{9})$/;
-      return regex.test(phone);
+    function isValidVzlaPhone(raw) {
+      const phone = raw.replace(/\s|-/g, "");
+      return /^(?:\+58|0)(4\d{9})$/.test(phone);
     }
 
-    function updateSendButtonState() {
-      const nameOk = clientName.value.trim().length > 0;
-      const phoneOk = isValidVzlaPhone(clientPhone.value.trim());
-      const canSend = nameOk && phoneOk;
+    function sendToWhatsApp(message) {
+      window.open(buildWaLink(message), "_blank", "noopener,noreferrer");
+    }
 
-      phoneError.classList.toggle("hidden", clientPhone.value.trim() === "" || phoneOk);
+    function setHeaderState() {
+      const header = $("#siteHeader");
+      const y = window.scrollY || document.documentElement.scrollTop;
+      const scrolled = y > 12;
+      header.className = scrolled
+        ? "fixed inset-x-0 top-0 z-50 border-b border-slate-200/50 transition-all duration-300 bg-white/70 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.06)]"
+        : "fixed inset-x-0 top-0 z-50 border-b border-slate-200/50 transition-all duration-300 bg-white/70 backdrop-blur-md";
+    }
 
-      sendOrderBtn.disabled = !canSend;
-      sendOrderBtn.className = canSend
-        ? "w-full rounded-xl py-2.5 font-medium transition bg-corporate text-white hover:bg-corporateLight"
-        : "w-full rounded-xl py-2.5 font-medium transition bg-slate-300 text-slate-500 cursor-not-allowed";
+    function renderCategoryFilters() {
+      const wrap = $("#categoryFilters");
+      wrap.innerHTML = CATEGORIES.map((cat) => {
+        const active = cat === activeCategory;
+        const cls = active
+          ? "bg-brand-magenta text-white shadow-md shadow-brand-magenta/20 ring-1 ring-brand-magenta/15"
+          : "bg-white text-slate-700 ring-1 ring-slate-200 hover:ring-brand-magenta/30";
+        return `<button type="button" data-cat="${cat}" class="filter-btn rounded-full px-3 py-1.5 text-[11px] sm:text-xs font-semibold transition ${cls}">${cat}</button>`;
+      }).join("");
+
+      wrap.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          activeCategory = btn.getAttribute("data-cat");
+          renderCategoryFilters();
+          renderProducts();
+        });
+      });
+    }
+
+    function productMatches(p) {
+      const q = searchQuery.trim().toLowerCase();
+      const catOk = activeCategory === "Todos" || p.category === activeCategory;
+      const qOk =
+        !q ||
+        p.name.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q) ||
+        p.detail.toLowerCase().includes(q);
+      return catOk && qOk;
+    }
+
+    function renderProducts() {
+      const grid = $("#productGrid");
+      grid.innerHTML = products
+        .filter(productMatches)
+        .map((p) => {
+          const qty = quantities[p.id];
+          const active = qty > 0;
+          const stockCls =
+            p.stock <= 0 ? "bg-rose-50 text-rose-700 ring-rose-200" : "bg-emerald-50 text-emerald-800 ring-emerald-200";
+          const borderCls = active
+            ? "product-card-active border border-brand-magenta/55"
+            : "border border-slate-200/90 shadow-sm hover:border-brand-magenta/30 hover:shadow-card-glow";
+
+          return `
+          <article class="product-card group rounded-2xl bg-white ${borderCls} transition-all duration-300 overflow-hidden" data-id="${p.id}">
+            <div class="relative aspect-[4/3] overflow-hidden bg-slate-100">
+              <img src="${p.image}" alt="" class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]" loading="lazy" width="800" height="600" />
+              <div class="absolute top-2 right-2 inline-flex items-center gap-1 rounded-full ${stockCls} px-2 py-0.5 text-[10px] font-bold ring-1">
+                <span class="h-1 w-1 rounded-full ${p.stock > 0 ? "bg-emerald-500" : "bg-rose-500"}"></span>
+                ${p.stock > 0 ? `${p.stock} Disp.` : "Agotado"}
+              </div>
+            </div>
+            <div class="p-3 sm:p-4">
+              <p class="text-[10px] font-extrabold uppercase tracking-wide text-brand-magenta">${p.category}</p>
+              <h3 class="mt-0.5 text-sm sm:text-base font-extrabold text-brand-navy leading-snug line-clamp-2">${p.name}</h3>
+              <p class="mt-1 text-xs text-slate-500 line-clamp-2">${p.detail}</p>
+              <div class="mt-3 flex items-end justify-between gap-2">
+                <div>
+                  <p class="text-[10px] font-semibold text-slate-400">Precio</p>
+                  <p class="text-lg sm:text-xl font-extrabold text-brand-magenta leading-none">${formatMoney(p.price)}</p>
+                </div>
+                <div class="inline-flex items-center rounded-full border border-slate-200/90 bg-white text-slate-600 shadow-inner overflow-hidden shrink-0">
+                  <button type="button" class="qty-btn px-2 py-1 text-sm font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition" data-act="dec" data-id="${p.id}">−</button>
+                  <span class="qty-value w-7 text-center text-xs font-bold tabular-nums text-slate-800" data-id="${p.id}">${qty}</span>
+                  <button type="button" class="qty-btn px-2 py-1 text-sm font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition" data-act="inc" data-id="${p.id}">+</button>
+                </div>
+              </div>
+            </div>
+          </article>`;
+        })
+        .join("");
+
+      grid.querySelectorAll(".qty-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-id");
+          const p = products.find((x) => x.id === id);
+          if (!p) return;
+          let q = quantities[id];
+          if (btn.getAttribute("data-act") === "inc") q = p.stock > 0 ? Math.min(p.stock, q + 1) : q;
+          if (btn.getAttribute("data-act") === "dec") q = Math.max(0, q - 1);
+          quantities[id] = q;
+          renderProducts();
+          refreshOrderState();
+        });
+      });
     }
 
     function refreshOrderState() {
-      const hasItems = getSelections().length > 0;
-      orderBtn.disabled = !hasItems;
-      orderBtn.className = hasItems
-        ? "inline-flex items-center rounded-xl px-8 py-3 text-sm font-semibold shadow-premium transition bg-corporate text-white hover:bg-corporateLight"
-        : "inline-flex items-center rounded-xl px-8 py-3 text-sm font-semibold shadow-premium transition bg-slate-300 text-slate-500 cursor-not-allowed";
+      const selected = getSelections();
+      const total = calcTotal(selected);
+      const count = selected.reduce((s, x) => s + x.qty, 0);
+
+      $("#barCount").textContent = String(count);
+      $("#barTotal").textContent = formatMoney(total);
+
+      const bar = $("#orderBar");
+      const show = selected.length > 0;
+      bar.classList.toggle("pointer-events-none", !show);
+      bar.classList.toggle("opacity-0", !show);
+      bar.classList.toggle("translate-y-full", !show);
     }
 
     function renderModalSummary() {
       const selected = getSelections();
-      const total = calcTotal(selected);
-
-      orderSummaryList.innerHTML = "";
+      const list = $("#orderSummaryList");
+      const empty = $("#orderSummaryEmpty");
+      list.innerHTML = "";
       if (!selected.length) {
-        orderSummaryEmpty.classList.remove("hidden");
+        empty.classList.remove("hidden");
       } else {
-        orderSummaryEmpty.classList.add("hidden");
-        selected.forEach(item => {
+        empty.classList.add("hidden");
+        selected.forEach((item) => {
           const li = document.createElement("li");
-          li.className = "flex items-center justify-between gap-2";
+          li.className = "flex items-start justify-between gap-2 rounded-2xl border border-slate-200 bg-white px-2.5 py-2";
           li.innerHTML = `
-            <span class="text-slate-700">${item.name} × ${item.qty}</span>
-            <span class="font-medium text-slate-800">$${item.subtotal.toFixed(2)}</span>
-          `;
-          orderSummaryList.appendChild(li);
+            <div class="min-w-0">
+              <p class="text-sm font-bold text-slate-900 leading-snug">${item.name}</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">${item.detail}</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">${formatMoney(item.price)} × ${item.qty}</p>
+            </div>
+            <p class="shrink-0 text-sm font-extrabold text-brand-magenta">${formatMoney(item.subtotal)}</p>`;
+          list.appendChild(li);
         });
       }
-
-      modalTotal.textContent = `$${total.toFixed(2)}`;
+      $("#modalTotal").textContent = formatMoney(calcTotal(selected));
     }
 
-    // Inicializar tarjetas
-    cards.forEach(card => {
-      const stock = parseInt(card.dataset.stock || "0", 10);
-      const badge = card.querySelector(".stock-badge");
-      const qtyValue = card.querySelector(".qty-value");
-      const btns = card.querySelectorAll(".qty-btn");
+    function updateSendButtonState() {
+      const nameOk = $("#clientName").value.trim().length > 0;
+      const phoneOk = isValidVzlaPhone($("#clientPhone").value.trim());
+      const phoneVal = $("#clientPhone").value.trim();
+      $("#phoneError").classList.toggle("hidden", phoneVal === "" || phoneOk);
 
-      setStockBadgeClass(stock, badge);
+      const canSend = nameOk && phoneOk;
+      const btn = $("#sendOrderBtn");
+      btn.disabled = !canSend;
+    }
 
-      btns.forEach(btn => {
-        btn.addEventListener("click", () => {
-          let value = parseInt(qtyValue.textContent, 10) || 0;
-          if (btn.dataset.action === "increase" && value < stock) value += 1;
-          if (btn.dataset.action === "decrease") value = Math.max(0, value - 1);
-          qtyValue.textContent = value;
-          refreshOrderState();
-        });
-      });
-    });
-
-    // WA flotante (mensaje general)
-    waFloatBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      window.open(buildWaLink(BASE_MESSAGE), "_blank");
-    });
-
-    // Modal open/close
     function openModal() {
       const selected = getSelections();
-      if (!selected.length) {
-        alert("Selecciona al menos un producto antes de ordenar.");
-        return;
-      }
+      if (!selected.length) return;
       renderModalSummary();
-      updateSendButtonState();
-      sendingMessage.classList.add("hidden");
-      modal.classList.remove("hidden");
+      $("#phoneError").classList.add("hidden");
+      $("#orderModal").classList.remove("hidden");
       document.body.classList.add("overflow-hidden");
+      updateSendButtonState();
     }
 
     function closeModal() {
-      modal.classList.add("hidden");
+      $("#orderModal").classList.add("hidden");
       document.body.classList.remove("overflow-hidden");
-      sendingMessage.classList.add("hidden");
     }
 
-    orderBtn.addEventListener("click", openModal);
-    closeModalBtn.addEventListener("click", closeModal);
-    cancelModalBtn.addEventListener("click", closeModal);
+    $("#searchInput").addEventListener("input", (e) => {
+      searchQuery = e.target.value || "";
+      renderProducts();
+    });
 
-    modal.addEventListener("click", (e) => {
+    $("#waFloatBtn").addEventListener("click", (e) => {
+      e.preventDefault();
+      sendToWhatsApp(BASE_MESSAGE);
+    });
+
+    $("#openSummaryBtn").addEventListener("click", openModal);
+    $("#closeModalBtn").addEventListener("click", closeModal);
+    $("#orderModal").addEventListener("click", (e) => {
       if (e.target.classList.contains("modal-backdrop")) closeModal();
     });
 
-    // Validaciones en vivo
-    clientName.addEventListener("input", updateSendButtonState);
-    clientPhone.addEventListener("input", updateSendButtonState);
+    $("#clearCartBtn").addEventListener("click", () => {
+      quantities = Object.fromEntries(products.map((p) => [p.id, 0]));
+      renderProducts();
+      refreshOrderState();
+    });
 
-    // Submit pedido
-    orderForm.addEventListener("submit", (e) => {
-      e.preventDefault();
+    $("#clientName").addEventListener("input", updateSendButtonState);
+    $("#clientPhone").addEventListener("input", updateSendButtonState);
 
+    $("#sendOrderBtn").addEventListener("click", () => {
       const selected = getSelections();
       if (!selected.length) {
-        alert("No hay productos seleccionados.");
         closeModal();
         refreshOrderState();
         return;
       }
-
-      const nameValue = clientName.value.trim();
-      const phoneValue = clientPhone.value.trim();
-      const labValue = labName.value.trim() || "No especificado";
-
+      const nameValue = $("#clientName").value.trim();
+      const phoneValue = $("#clientPhone").value.trim();
       if (!nameValue || !isValidVzlaPhone(phoneValue)) {
         updateSendButtonState();
         return;
       }
 
       const total = calcTotal(selected);
-      const lines = selected.map(item =>
-        `- ${item.name} | Cantidad: ${item.qty} | Subtotal: $${item.subtotal.toFixed(2)}`
+      const lines = selected.map(
+        (i) => `• ${i.name} — Cant: ${i.qty} — Subtotal: ${formatMoney(i.subtotal)}`
       );
 
-      const message =
-`📦 NUEVO PEDIDO - MEDIZA ARAGUA
+      const message = `📦 PEDIDO — REACTIVA SEARCH
 
 👤 Cliente: ${nameValue}
 📞 Teléfono: ${phoneValue}
-🏭 Laboratorio: ${labValue}
 
-🧾 Productos solicitados:
+🧾 Productos:
 ${lines.join("\n")}
 
-💵 Total a pagar: $${total.toFixed(2)}`;
+💵 Total estimado: ${formatMoney(total)}
 
-      sendingMessage.classList.remove("hidden");
-      sendOrderBtn.disabled = true;
+_Enviado desde la web._`;
 
-      setTimeout(() => {
-        window.open(buildWaLink(message), "_blank");
-        sendOrderBtn.disabled = false;
-        closeModal();
-      }, 900);
+      sendToWhatsApp(message);
+      closeModal();
     });
 
+    window.addEventListener("scroll", setHeaderState, { passive: true });
+    window.addEventListener("resize", setHeaderState);
+
+    applyAssets();
+    renderCategoryFilters();
+    renderProducts();
+    setHeaderState();
     refreshOrderState();
+    updateSendButtonState();
   </script>
 </body>
 </html>
