@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mediza Aragua — Venezuela R.</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            corporate: "#1a365d",
+            corporateLight: "#2c5282",
+            sectionBg: "#f8fafc"
+          },
+          boxShadow: {
+            premium: "0 10px 30px rgba(26,54,93,0.08)",
+            premiumHover: "0 16px 40px rgba(26,54,93,0.14)"
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    .nav-link { position: relative; transition: color .25s ease; }
+    .nav-link::after {
+      content: ""; position: absolute; left: 0; bottom: -6px; width: 0; height: 2px;
+      background: #1a365d; transition: width .25s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    .product-card {
+      transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(26,54,93,0.14);
+      border-color: rgba(44,82,130,0.35);
+    }
+
+    .qty-btn { transition: all .2s ease; }
+    .qty-btn:active { transform: scale(0.95); }
+
+    .photo-frame {
+      background: linear-gradient(145deg, #f8fafc, #ffffff);
+      border: 1px solid rgba(26, 54, 93, 0.15);
+      position: relative; overflow: hidden;
+    }
+    .photo-frame::before {
+      content: ""; position: absolute; inset: 0;
+      border: 10px solid rgba(255, 255, 255, 0.7);
+      border-radius: 1rem; pointer-events: none;
+    }
+
+    .stock-high   { background: #f0fff4; color: #2f855a; border: 1px solid #9ae6b4; }
+    .stock-medium { background: #fffaf0; color: #c05621; border: 1px solid #fbd38d; }
+    .stock-zero   { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; }
+
+    .modal-backdrop { background: rgba(15, 23, 42, 0.55); }
+
+    .input-field {
+      width: 100%; border: 1px solid #cbd5e1; border-radius: .75rem;
+      padding: .65rem .85rem; font-size: .95rem; outline: none;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .input-field:focus {
+      border-color: #2c5282;
+      box-shadow: 0 0 0 3px rgba(44,82,130,.14);
+    }
+  </style>
+</head>
+
+<body class="bg-white text-slate-800 font-sans antialiased">
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- EXACTO según solicitado -->
+      <a href="#inicio" class="text-corporate font-semibold text-lg sm:text-xl tracking-tight">
+        Mediza Aragua — Venezuela R.
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm text-slate-600">
+        <a href="#inicio" class="nav-link hover:text-corporate">Inicio</a>
+        <a href="#catalogo" class="nav-link hover:text-corporate">Productos</a>
+        <a href="#contacto" class="nav-link hover:text-corporate">Contacto</a>
+      </nav>
+
+      <button id="menuBtn" class="md:hidden rounded-lg border border-slate-200 px-3 py-2 text-corporate text-sm" aria-label="Abrir menú">
+        Menú
+      </button>
+    </div>
+
+    <div id="mobileMenu" class="md:hidden hidden border-t border-slate-100 bg-white">
+      <nav class="px-4 py-3 flex flex-col gap-3 text-sm text-slate-700">
+        <a href="#inicio" class="hover:text-corporate">Inicio</a>
+        <a href="#catalogo" class="hover:text-corporate">Productos</a>
+        <a href="#contacto" class="hover:text-corporate">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section id="inicio" class="bg-sectionBg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+      <div class="grid lg:grid-cols-2 gap-10 items-center">
+        <div>
+          <p class="inline-flex items-center rounded-full border border-corporate/20 text-corporate text-xs font-semibold tracking-wide px-3 py-1 bg-white">
+            INFORMACIÓN RÁPIDA
+          </p>
+          <h1 class="mt-5 text-3xl sm:text-4xl font-bold text-corporate leading-tight">
+            Distribución farmacéutica confiable para Aragua
+          </h1>
+          <p class="mt-5 text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl">
+            Continuidad de abastecimiento, catálogo profesional y atención comercial ágil para farmacias y centros de salud.
+          </p>
+        </div>
+
+        <div>
+          <div class="photo-frame h-80 sm:h-96 rounded-2xl shadow-premium grid place-items-center p-4">
+            <img src="" alt="Foto de presentación" class="w-full h-full object-cover rounded-xl hidden" id="motherPhoto" />
+            <div id="photoPlaceholder" class="text-center px-6">
+              <div class="w-16 h-16 mx-auto rounded-full bg-corporate/10 text-corporate grid place-items-center text-2xl">📷</div>
+              <h3 class="mt-4 text-corporate font-semibold text-lg">Espacio listo para foto de tu madre</h3>
+              <p class="mt-2 text-sm text-slate-500">Agrega la ruta en <code>src</code> de la etiqueta <code>img</code>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Catálogo -->
+  <section id="catalogo" class="py-16 sm:py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="mb-10">
+        <h2 class="text-2xl sm:text-3xl font-bold text-corporate">Catálogo de Ventas</h2>
+        <p class="mt-2 text-slate-600">Selecciona cantidades y luego presiona Ordenar.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="productGrid">
+        <article class="product-card bg-white border border-slate-200 rounded-2xl p-5 shadow-premium" data-name="Amoxicilina 500mg" data-price="8.50" data-stock="120">
+          <h3 class="text-lg font-semibold text-corporate">Amoxicilina 500mg</h3>
+          <p class="text-sm text-slate-500 mt-1">Laboratorio FarmaPlus</p>
+          <div class="mt-4 flex items-center justify-between">
+            <p class="text-2xl font-bold text-blue-600">$8.50</p>
+            <span class="stock-badge text-xs font-semibold rounded-full px-2.5 py-1 border">Stock: 120</span>
+          </div>
+          <div class="mt-5 inline-flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="decrease">-</button>
+            <span class="qty-value w-12 text-center font-semibold">0</span>
+            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="increase">+</button>
+          </div>
+        </article>
+
+        <article class="product-card bg-white border border-slate-200 rounded-2xl p-5 shadow-premium" data-name="Losartán 50mg" data-price="12.00" data-stock="25">
+          <h3 class="text-lg font-semibold text-corporate">Losartán 50mg</h3>
+          <p class="text-sm text-slate-500 mt-1">Laboratorio CardioLab</p>
+          <div class="mt-4 flex items-center justify-between">
+            <p class="text-2xl font-bold text-blue-600">$12.00</p>
+            <span class="stock-badge text-xs font-semibold rounded-full px-2.5 py-1 border">Stock: 25</span>
+          </div>
+          <div class="mt-5 inline-flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="decrease">-</button>
+            <span class="qty-value w-12 text-center font-semibold">0</span>
+            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="increase">+</button>
+          </div>
+        </article>
+
+        <article class="product-card bg-white border border-slate-200 rounded-2xl p-5 shadow-premium" data-name="Omeprazol 20mg" data-price="6.75" data-stock="0">
+          <h3 class="text-lg font-semibold text-corporate">Omeprazol 20mg</h3>
+          <p class="text-sm text-slate-500 mt-1">Laboratorio GastroMed</p>
+          <div class="mt-4 flex items-center justify-between">
+            <p class="text-2xl font-bold text-blue-600">$6.75</p>
+            <span class="stock-badge text-xs font-semibold rounded-full px-2.5 py-1 border">Stock: 0</span>
+          </div>
+          <div class="mt-5 inline-flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="decrease">-</button>
+            <span class="qty-value w-12 text-center font-semibold">0</span>
+            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="increase">+</button>
+          </div>
+        </article>
+
+        <article class="product-card bg-white border border-slate-200 rounded-2xl p-5 shadow-premium" data-name="Acetaminofén 500mg" data-price="4.90" data-stock="75">
+          <h3 class="text-lg font-semibold text-corporate">Acetaminofén 500mg</h3>
+          <p class="text-sm text-slate-500 mt-1">Laboratorio MediCore</p>
+          <div class="mt-4 flex items-center justify-between">
+            <p class="text-2xl font-bold text-blue-600">$4.90</p>
+            <span class="stock-badge text-xs font-semibold rounded-full px-2.5 py-1 border">Stock: 75</span>
+          </div>
+          <div class="mt-5 inline-flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="decrease">-</button>
+            <span class="qty-value w-12 text-center font-semibold">0</span>
+            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="increase">+</button>
+          </div>
+        </article>
+
+        <article class="product-card bg-white border border-slate-200 rounded-2xl p-5 shadow-premium" data-name="Metformina 850mg" data-price="9.80" data-stock="12">
+          <h3 class="text-lg font-semibold text-corporate">Metformina 850mg</h3>
+          <p class="text-sm text-slate-500 mt-1">Laboratorio DiabeCare</p>
+          <div class="mt-4 flex items-center justify-between">
+            <p class="text-2xl font-bold text-blue-600">$9.80</p>
+            <span class="stock-badge text-xs font-semibold rounded-full px-2.5 py-1 border">Stock: 12</span>
+          </div>
+          <div class="mt-5 inline-flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="decrease">-</button>
+            <span class="qty-value w-12 text-center font-semibold">0</span>
+            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="increase">+</button>
+          </div>
+        </article>
+
+        <article class="product-card bg-white border border-slate-200 rounded-2xl p-5 shadow-premium" data-name="Azitromicina 500mg" data-price="14.20" data-stock="0">
+          <h3 class="text-lg font-semibold text-corporate">Azitromicina 500mg</h3>
+          <p class="text-sm text-slate-500 mt-1">Laboratorio BioSalud</p>
+          <div class="mt-4 flex items-center justify-between">
+            <p class="text-2xl font-bold text-blue-600">$14.20</p>
+            <span class="stock-badge text-xs font-semibold rounded-full px-2.5 py-1 border">Stock: 0</span>
+          </div>
+          <div class="mt-5 inline-flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="decrease">-</button>
+            <span class="qty-value w-12 text-center font-semibold">0</span>
+            <button class="qty-btn px-4 py-2 text-corporate font-bold hover:bg-slate-100" data-action="increase">+</button>
+          </div>
+        </article>
+      </div>
+
+      <div class="mt-10 flex justify-center">
+        <button id="orderBtn" disabled
+          class="inline-flex items-center rounded-xl px-8 py-3 text-sm font-semibold shadow-premium transition bg-slate-300 text-slate-500 cursor-not-allowed">
+          Ordenar por WhatsApp
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto" class="bg-sectionBg py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h3 class="text-2xl sm:text-3xl font-bold text-corporate">Atención comercial Mediza Aragua</h3>
+      <p class="mt-3 text-slate-600">Solicita disponibilidad y condiciones de despacho.</p>
+    </div>
+  </section>
+
+  <!-- WA flotante: subido en móvil para no tapar Ordenar -->
+  <a id="waFloatBtn" href="#"
+     class="fixed right-5 bottom-24 md:bottom-5 w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 text-white grid place-items-center text-2xl z-30 shadow-xl"
+     aria-label="WhatsApp" title="Escribir por WhatsApp">
+    💬
+  </a>
+
+  <!-- Modal -->
+  <div id="orderModal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-backdrop absolute inset-0"></div>
+
+    <div class="relative min-h-screen flex items-center justify-center p-4">
+      <div class="w-full max-w-xl bg-white rounded-2xl shadow-premiumHover border border-slate-200 p-6">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="text-xl font-bold text-corporate">Confirmar Pedido</h3>
+            <p class="text-sm text-slate-500 mt-1">Verifica resumen y completa los datos del cliente.</p>
+          </div>
+          <button id="closeModalBtn" class="text-slate-500 hover:text-slate-700 text-lg" aria-label="Cerrar modal">✕</button>
+        </div>
+
+        <!-- Resumen visual dentro del modal -->
+        <div class="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <p class="text-sm font-semibold text-slate-700 mb-2">Resumen del pedido</p>
+          <ul id="orderSummaryList" class="space-y-2 text-sm text-slate-700"></ul>
+          <p id="orderSummaryEmpty" class="text-sm text-slate-500">No hay productos seleccionados.</p>
+          <hr class="my-3 border-slate-200" />
+          <p class="text-base font-bold text-corporate">Total General: <span id="modalTotal">$0.00</span></p>
+        </div>
+
+        <form id="orderForm" class="mt-5 space-y-4">
+          <div>
+            <label for="clientName" class="block text-sm font-medium text-slate-700 mb-1">Nombre del cliente</label>
+            <input id="clientName" type="text" class="input-field" placeholder="Ej: Farmacia San José" required />
+          </div>
+
+          <div>
+            <label for="clientPhone" class="block text-sm font-medium text-slate-700 mb-1">Teléfono (Venezuela)</label>
+            <input id="clientPhone" type="tel" class="input-field" placeholder="Ej: 04121234567 o +584121234567" required />
+            <p id="phoneError" class="text-xs text-red-600 mt-1 hidden">Formato inválido. Usa 04XXXXXXXXX o +584XXXXXXXXX.</p>
+          </div>
+
+          <div>
+            <label for="labName" class="block text-sm font-medium text-slate-700 mb-1">Nombre del Laboratorio</label>
+            <input id="labName" type="text" class="input-field" placeholder="Ej: FarmaPlus" />
+          </div>
+
+          <p id="sendingMessage" class="text-sm text-emerald-600 font-medium hidden">
+            ¡Pedido preparado! Redirigiendo a WhatsApp...
+          </p>
+
+          <div class="flex gap-3 pt-1">
+            <button type="button" id="cancelModalBtn"
+              class="w-full rounded-xl border border-slate-300 text-slate-700 py-2.5 font-medium hover:bg-slate-50 transition">
+              Cancelar
+            </button>
+            <button id="sendOrderBtn" type="submit" disabled
+              class="w-full rounded-xl py-2.5 font-medium transition bg-slate-300 text-slate-500 cursor-not-allowed">
+              Enviar Pedido
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================
+    // CONFIGURACION
+    // =========================
+    // Reemplazar por numero real (sin + ni espacios). Ej: 58412XXXXXXX
+    const WA_NUMBER = "58XXXXXXXXXX";
+    const BASE_MESSAGE = "Hola, estoy interesado en realizar un pedido en Mediza Aragua";
+
+    // Header mobile
+    const menuBtn = document.getElementById("menuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+    menuBtn.addEventListener("click", () => mobileMenu.classList.toggle("hidden"));
+
+    // Foto placeholder
+    const motherPhoto = document.getElementById("motherPhoto");
+    const photoPlaceholder = document.getElementById("photoPlaceholder");
+    if (motherPhoto.getAttribute("src") && motherPhoto.getAttribute("src").trim() !== "") {
+      motherPhoto.classList.remove("hidden");
+      photoPlaceholder.classList.add("hidden");
+    }
+
+    // Elementos generales
+    const cards = [...document.querySelectorAll(".product-card")];
+    const orderBtn = document.getElementById("orderBtn");
+    const waFloatBtn = document.getElementById("waFloatBtn");
+
+    // Modal
+    const modal = document.getElementById("orderModal");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const cancelModalBtn = document.getElementById("cancelModalBtn");
+    const orderForm = document.getElementById("orderForm");
+
+    // Form
+    const clientName = document.getElementById("clientName");
+    const clientPhone = document.getElementById("clientPhone");
+    const labName = document.getElementById("labName");
+    const phoneError = document.getElementById("phoneError");
+    const sendOrderBtn = document.getElementById("sendOrderBtn");
+    const sendingMessage = document.getElementById("sendingMessage");
+
+    // Resumen modal
+    const orderSummaryList = document.getElementById("orderSummaryList");
+    const orderSummaryEmpty = document.getElementById("orderSummaryEmpty");
+    const modalTotal = document.getElementById("modalTotal");
+
+    // Helpers stock
+    function setStockBadgeClass(stock, badge) {
+      badge.classList.remove("stock-high", "stock-medium", "stock-zero");
+      if (stock <= 0) badge.classList.add("stock-zero");
+      else if (stock <= 30) badge.classList.add("stock-medium");
+      else badge.classList.add("stock-high");
+    }
+
+    function getSelections() {
+      return cards.map(card => {
+        const name = card.dataset.name;
+        const price = parseFloat(card.dataset.price || "0");
+        const stock = parseInt(card.dataset.stock || "0", 10);
+        const qty = parseInt(card.querySelector(".qty-value").textContent || "0", 10);
+        return { card, name, price, stock, qty, subtotal: qty * price };
+      }).filter(item => item.qty > 0);
+    }
+
+    function calcTotal(items) {
+      return items.reduce((sum, item) => sum + item.subtotal, 0);
+    }
+
+    function buildWaLink(message) {
+      return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
+    }
+
+    // Validacion telefono Venezuela:
+    // 04121234567  o  +584121234567
+    function isValidVzlaPhone(phoneRaw) {
+      const phone = phoneRaw.replace(/\s|-/g, "");
+      const regex = /^(?:\+58|0)(4\d{9})$/;
+      return regex.test(phone);
+    }
+
+    function updateSendButtonState() {
+      const nameOk = clientName.value.trim().length > 0;
+      const phoneOk = isValidVzlaPhone(clientPhone.value.trim());
+      const canSend = nameOk && phoneOk;
+
+      phoneError.classList.toggle("hidden", clientPhone.value.trim() === "" || phoneOk);
+
+      sendOrderBtn.disabled = !canSend;
+      sendOrderBtn.className = canSend
+        ? "w-full rounded-xl py-2.5 font-medium transition bg-corporate text-white hover:bg-corporateLight"
+        : "w-full rounded-xl py-2.5 font-medium transition bg-slate-300 text-slate-500 cursor-not-allowed";
+    }
+
+    function refreshOrderState() {
+      const hasItems = getSelections().length > 0;
+      orderBtn.disabled = !hasItems;
+      orderBtn.className = hasItems
+        ? "inline-flex items-center rounded-xl px-8 py-3 text-sm font-semibold shadow-premium transition bg-corporate text-white hover:bg-corporateLight"
+        : "inline-flex items-center rounded-xl px-8 py-3 text-sm font-semibold shadow-premium transition bg-slate-300 text-slate-500 cursor-not-allowed";
+    }
+
+    function renderModalSummary() {
+      const selected = getSelections();
+      const total = calcTotal(selected);
+
+      orderSummaryList.innerHTML = "";
+      if (!selected.length) {
+        orderSummaryEmpty.classList.remove("hidden");
+      } else {
+        orderSummaryEmpty.classList.add("hidden");
+        selected.forEach(item => {
+          const li = document.createElement("li");
+          li.className = "flex items-center justify-between gap-2";
+          li.innerHTML = `
+            <span class="text-slate-700">${item.name} × ${item.qty}</span>
+            <span class="font-medium text-slate-800">$${item.subtotal.toFixed(2)}</span>
+          `;
+          orderSummaryList.appendChild(li);
+        });
+      }
+
+      modalTotal.textContent = `$${total.toFixed(2)}`;
+    }
+
+    // Inicializar tarjetas
+    cards.forEach(card => {
+      const stock = parseInt(card.dataset.stock || "0", 10);
+      const badge = card.querySelector(".stock-badge");
+      const qtyValue = card.querySelector(".qty-value");
+      const btns = card.querySelectorAll(".qty-btn");
+
+      setStockBadgeClass(stock, badge);
+
+      btns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          let value = parseInt(qtyValue.textContent, 10) || 0;
+          if (btn.dataset.action === "increase" && value < stock) value += 1;
+          if (btn.dataset.action === "decrease") value = Math.max(0, value - 1);
+          qtyValue.textContent = value;
+          refreshOrderState();
+        });
+      });
+    });
+
+    // WA flotante (mensaje general)
+    waFloatBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.open(buildWaLink(BASE_MESSAGE), "_blank");
+    });
+
+    // Modal open/close
+    function openModal() {
+      const selected = getSelections();
+      if (!selected.length) {
+        alert("Selecciona al menos un producto antes de ordenar.");
+        return;
+      }
+      renderModalSummary();
+      updateSendButtonState();
+      sendingMessage.classList.add("hidden");
+      modal.classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+    }
+
+    function closeModal() {
+      modal.classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+      sendingMessage.classList.add("hidden");
+    }
+
+    orderBtn.addEventListener("click", openModal);
+    closeModalBtn.addEventListener("click", closeModal);
+    cancelModalBtn.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (e) => {
+      if (e.target.classList.contains("modal-backdrop")) closeModal();
+    });
+
+    // Validaciones en vivo
+    clientName.addEventListener("input", updateSendButtonState);
+    clientPhone.addEventListener("input", updateSendButtonState);
+
+    // Submit pedido
+    orderForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const selected = getSelections();
+      if (!selected.length) {
+        alert("No hay productos seleccionados.");
+        closeModal();
+        refreshOrderState();
+        return;
+      }
+
+      const nameValue = clientName.value.trim();
+      const phoneValue = clientPhone.value.trim();
+      const labValue = labName.value.trim() || "No especificado";
+
+      if (!nameValue || !isValidVzlaPhone(phoneValue)) {
+        updateSendButtonState();
+        return;
+      }
+
+      const total = calcTotal(selected);
+      const lines = selected.map(item =>
+        `- ${item.name} | Cantidad: ${item.qty} | Subtotal: $${item.subtotal.toFixed(2)}`
+      );
+
+      const message =
+`📦 NUEVO PEDIDO - MEDIZA ARAGUA
+
+👤 Cliente: ${nameValue}
+📞 Teléfono: ${phoneValue}
+🏭 Laboratorio: ${labValue}
+
+🧾 Productos solicitados:
+${lines.join("\n")}
+
+💵 Total a pagar: $${total.toFixed(2)}`;
+
+      sendingMessage.classList.remove("hidden");
+      sendOrderBtn.disabled = true;
+
+      setTimeout(() => {
+        window.open(buildWaLink(message), "_blank");
+        sendOrderBtn.disabled = false;
+        closeModal();
+      }, 900);
+    });
+
+    refreshOrderState();
+  </script>
+</body>
+</html>
